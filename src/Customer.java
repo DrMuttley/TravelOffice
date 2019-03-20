@@ -8,6 +8,14 @@ public class Customer {
         return name;
     }
 
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+    }
+
     public Customer(String name) {
         this.name = name;
     }
@@ -23,6 +31,14 @@ public class Customer {
     @Override
     public String toString(){
 
-        return name + " " + address.toString() + " " + trip.toString();
+        String customerData = name;
+
+        if(address != null){
+            customerData += " " + address.toString();
+        }
+        if(trip != null){
+            customerData += " " + trip.toString();
+        }
+        return customerData;
     }
 }

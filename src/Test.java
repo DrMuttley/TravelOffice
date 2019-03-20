@@ -39,10 +39,10 @@ public class Test {
 
         /////////////////////////////////////////// 8.2 ///////////////////////////////////////////
 
-//        MainHandler mainHandler = new MainHandler();
-//        mainHandler.showMenu();
-//        while(!mainHandler.reactForAnswerFromUser(mainHandler.getAnswerFromUser())){
-//            mainHandler.showMenu();
-//        }
+        MainHandler mainHandler = new MainHandler();
+        mainHandler.showMenu();
+        while(!mainHandler.reactForAnswerFromUser(mainHandler.getAnswerFromUser())){
+            mainHandler.showMenu();
+        }
     }
 }

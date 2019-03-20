@@ -1,3 +1,5 @@
+import javafx.scene.input.DataFormat;
+
 import java.util.Scanner;
 
 public class MainHandler implements UserInterface {
@@ -8,31 +10,53 @@ public class MainHandler implements UserInterface {
 
     @Override
     public Customer addCustomer() {
-        showAnswerFromSystem("Provide customer data (example: John Doe):");
-        Customer customer = new Customer(getAnswerFromUser());
-        travelOffice.addCustomer(customer);
-        return customer;
+
+        showAnswerFromSystem("Provide customer data (example: John Doe Opolska 40-710 Katowice):");
+
+        String[] customerData = splitInputData(getAnswerFromUser());
+
+        if(customerData.length == 5) {
+
+            Customer customer = new Customer(customerData[0] + " " + customerData[1]);
+            customer.setAddress(new Address(customerData[2], customerData[3], customerData[4]));
+
+            travelOffice.addCustomer(customer);
+            return customer;
+        }else{
+            showAnswerFromSystem("Wrong data, back and try again.\n");
+            return null;
+        }
     }
 
     @Override
     public Trip addTrip() {
 
-        showAnswerFromSystem("Provide type of trip (domestic/abroad):");
+        showAnswerFromSystem("Provide type of trip (DOMESTIC/ABROAD):");
 
         while (true) {
 
             switch (getAnswerFromUser()) {
 
-                case "domestic": {
-                    showAnswerFromSystem("Provide domestic trip details:");
-                    DomesticTrip domesticTrip = new DomesticTrip(getAnswerFromUser());
+                case "DOMESTIC": {
+                    showAnswerFromSystem("Provide domestic trip details (example: 2019-12-01 2019-12-20 France 4000 ");
+
+                    String[] tripData = splitInputData(getAnswerFromUser());
+
+                    DomesticTrip domesticTrip = new DomesticTrip(Date.of(tripData[0]),
+                                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
+
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), domesticTrip);
                     return domesticTrip;
                 }
-                case "abroad": {
-                    showAnswerFromSystem("Provide abroad trip details:");
-                    AbroadTrip abroadTrip = new AbroadTrip(getAnswerFromUser());
+                case "ABROAD": {
+                    showAnswerFromSystem("Provide abroad trip details (example: 2019-12-01 2019-12-20 France 4000 ");
+
+                    String[] tripData = splitInputData(getAnswerFromUser());
+
+                    AbroadTrip abroadTrip = new AbroadTrip(Date.of(tripData[0]),
+                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
+
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), abroadTrip);
                     return abroadTrip;
@@ -52,19 +76,37 @@ public class MainHandler implements UserInterface {
         showAnswerFromSystem("Provide trip description:");
         String tripDescription = getAnswerFromUser();
 
-        travelOffice.findCustomerByName(userName).assignTrip(travelOffice.findTripByDescription(tripDescription));
+        if(travelOffice.findTripByDescription(tripDescription) != null && travelOffice.findCustomerByName(userName) != null) {
+            travelOffice.findCustomerByName(userName).assignTrip(travelOffice.findTripByDescription(tripDescription));
+        }else{
+            showAnswerFromSystem("The trip or customer wasn't found, make sure that the entered data is correct.");
+        }
     }
 
     @Override
     public boolean removeCustomer() {
         showAnswerFromSystem("Provide name of customer:");
-        return travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()));
+        if(travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()))){
+            return true;
+        }else{
+            showAnswerFromSystem("Customer not found.\n");
+            return false;
+        }
     }
 
     @Override
     public boolean removeTrip() {
         showAnswerFromSystem("Provide trip description:");
-        return travelOffice.removeTrip(getAnswerFromUser());
+
+        String description = getAnswerFromUser();
+
+        if(travelOffice.removeTrip(description)){
+            travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description)).setTrip(null);
+            return true;
+        }else{
+            showAnswerFromSystem("Trip wasn't found.\n");
+            return false;
+        }
     }
 
     @Override
@@ -138,11 +180,15 @@ public class MainHandler implements UserInterface {
                 break;
             }
             default: {
-                showAnswerFromSystem("Wrong short cut, check CapsLock button and try again: ");
+                showAnswerFromSystem("Wrong short cut, check CapsLock button and try again\n");
                 break;
             }
         }
         return communiactionWithUserEnd;
+    }
+
+    private String[] splitInputData(String inputData){
+        return inputData.split(" ");
     }
 }
 

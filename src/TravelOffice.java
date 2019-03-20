@@ -38,7 +38,7 @@ public class TravelOffice {
 
         String allTripsInfo = new String();
         for (Map.Entry<String,Trip> entry : getTripsMap().entrySet()) {
-            allTripsInfo += entry.getKey() + " " + entry.getValue().toString();
+            allTripsInfo += entry.getKey() + " " + entry.getValue().toString() + "\n";
         }
         return allTripsInfo;
     }
@@ -61,8 +61,17 @@ public class TravelOffice {
         return null;
     }
 
-    public Trip findTripByDescription(String tripDescription){
+    public Customer findCustomerByTrip(Trip trip){
 
+        for(Customer c : customersSet){
+            if(c.getTrip().equals(trip)){
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public Trip findTripByDescription(String tripDescription){
 
         for (Map.Entry<String,Trip> entry : getTripsMap().entrySet()) {
 
@@ -72,6 +81,9 @@ public class TravelOffice {
         }
         return null;
     }
+
+
+
 
     public boolean removeCustomer(Customer customer){
         return customersSet.remove(customer);
