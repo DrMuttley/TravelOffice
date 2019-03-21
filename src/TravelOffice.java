@@ -25,13 +25,21 @@ public class TravelOffice {
     }
 
     public void showAllCustomers(){
-        customersSet.forEach(customer -> System.out.println(customer.toString()));
-        System.out.println();
+        if(!getCustomersSet().isEmpty()) {
+            getCustomersSet().forEach(customer -> System.out.println(customer.toString()));
+            System.out.println();
+        }else{
+            System.out.println("There is no customers in the DB.\n");
+        }
     }
 
     public void showAllTrips(){
-        getTripsMap().entrySet().forEach(trip -> System.out.println(trip.getValue()));
-        System.out.println();
+        if(!getTripsMap().isEmpty()) {
+            getTripsMap().entrySet().forEach(trip -> System.out.println(trip.getValue()));
+            System.out.println();
+        }else{
+            System.out.println("There is no trip in the DB.\n");
+        }
     }
 
     public void addTrip(String description, Trip trip){
@@ -41,7 +49,6 @@ public class TravelOffice {
     public void removeTrip(String description) throws NoSuchTripException{
 
         if(tripsMap.containsKey(description)){
-            System.out.println(description);
             tripsMap.remove(description);
         }else{
             throw new NoSuchTripException("The trip wasn't found");

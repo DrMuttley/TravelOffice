@@ -1,4 +1,4 @@
-import java.time.temporal.ChronoUnit;
+import java.util.logging.Logger;
 import java.util.Scanner;
 
 public class MainHandler implements UserInterface {
@@ -6,6 +6,8 @@ public class MainHandler implements UserInterface {
     private TravelOffice travelOffice = new TravelOffice();
     private Scanner scan = new Scanner(System.in);
     private boolean communiactionWithUserEnd = false;
+
+    private static Logger logger = Logger.getLogger("mod12.ex01.to");
 
     @Override
     public Customer addCustomer() {
@@ -20,6 +22,10 @@ public class MainHandler implements UserInterface {
             customer.setAddress(new Address(customerData[2], customerData[3], customerData[4]));
 
             travelOffice.addCustomer(customer);
+
+            logger.info("New customer was added to DB.");
+            showAnswerFromSystem("The customer was successfully added to DB.\n");
+
             return customer;
         } else {
             showAnswerFromSystem("Wrong data, back and try again.\n");
@@ -34,7 +40,7 @@ public class MainHandler implements UserInterface {
 
         while (true) {
 
-            switch (getAnswerFromUser()) {
+            switch (getAnswerFromUser().toUpperCase()) {
 
                 case "DOMESTIC": {
                     showAnswerFromSystem("Provide domestic trip details (example: 2019-12-01 2019-12-20 France 4000 ");
@@ -46,6 +52,10 @@ public class MainHandler implements UserInterface {
 
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), domesticTrip);
+
+                    logger.info("New domestic trip was added to DB.");
+                    showAnswerFromSystem("The trip was successfully added to DB.\n");
+
                     return domesticTrip;
                 }
                 case "ABROAD": {
@@ -58,6 +68,10 @@ public class MainHandler implements UserInterface {
 
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), abroadTrip);
+
+                    logger.info("New abroad trip was added to DB.");
+                    showAnswerFromSystem("The trip was successfully added to DB.\n");
+
                     return abroadTrip;
                 }
                 default: {
@@ -82,6 +96,7 @@ public class MainHandler implements UserInterface {
                 showAnswerFromSystem("The trip wasn't found.\n");
             }
         } catch (NoSuchCustomerException e) {
+            logger.warning("No such customer exception");
             System.err.println(e.getMessage());
             showAnswerFromSystem("The customer wasn't found.\n");
         }
@@ -98,9 +113,12 @@ public class MainHandler implements UserInterface {
                 Customer foundCustomer = travelOffice.findCustomerByName(getAnswerFromUser());
                 travelOffice.getCustomersSet().removeIf(customer -> customer.equals(foundCustomer));
 
+                logger.info("The customer was removed from DB.");
                 showAnswerFromSystem("The customer was removed.\n");
+
                 return true;
             } catch (NoSuchCustomerException e) {
+                logger.warning("No such customer exception.");
                 System.err.println(e.getMessage());
                 showAnswerFromSystem("The customer wasn't found.\n");
                 return false;
@@ -118,17 +136,21 @@ public class MainHandler implements UserInterface {
         String description = getAnswerFromUser();
 
         try {
-            Customer customer = travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description));
-            travelOffice.removeTrip(description);
 
-            if (customer != null) {
+            Customer customer = travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description));
+
+            if(customer != null) {
                 customer.setTrip(null);
             }
-            showAnswerFromSystem("The trip was removed.");
+            travelOffice.removeTrip(description);
+
+            logger.info("The trip was removed from DB.");
+            showAnswerFromSystem("The trip was removed.\n");
+
             return true;
 
         } catch (NoSuchTripException e) {
-
+            logger.warning("No such trip exception");
             System.err.println(e.getMessage());
             showAnswerFromSystem("Trip wasn't found.\n");
             return false;
@@ -172,7 +194,7 @@ public class MainHandler implements UserInterface {
 
     public boolean reactForAnswerFromUser(String answerFromUser) {
 
-        switch (answerFromUser) {
+        switch (answerFromUser.toUpperCase()) {
             case "-AC": {
                 addCustomer();
                 break;
