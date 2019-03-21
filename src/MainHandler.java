@@ -1,3 +1,4 @@
+import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 public class MainHandler implements UserInterface {
@@ -93,37 +94,22 @@ public class MainHandler implements UserInterface {
 
             showAnswerFromSystem("Provide name of customer:");
 
-            return travelOffice.getCustomersSet().removeIf(customer -> {
-                try {
-                    equals(travelOffice.findCustomerByName(getAnswerFromUser()));
-                    showAnswerFromSystem("The customer was removed.\n");
-                    return true;
-                } catch (NoSuchCustomerException e) {
-                    System.err.println(e.getMessage());
-                    showAnswerFromSystem("The customer wasn't found.\n");
-                    return false;
-                }
-            });
+            try {
+                Customer foundCustomer = travelOffice.findCustomerByName(getAnswerFromUser());
+                travelOffice.getCustomersSet().removeIf(customer -> customer.equals(foundCustomer));
+
+                showAnswerFromSystem("The customer was removed.\n");
+                return true;
+            } catch (NoSuchCustomerException e) {
+                System.err.println(e.getMessage());
+                showAnswerFromSystem("The customer wasn't found.\n");
+                return false;
+            }
         }else{
             showAnswerFromSystem("The customers database is empty.\n");
             return false;
         }
     }
-
-//    @Override
-//    public boolean removeCustomer() {
-//
-//        showAnswerFromSystem("Provide name of customer:");
-//        try {
-//            travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()));
-//            showAnswerFromSystem("The customer was removed.\n");
-//            return true;
-//        } catch (NoSuchCustomerException e) {
-//            System.err.println(e.getMessage());
-//            showAnswerFromSystem("The customer wasn't found.\n");
-//            return false;
-//        }
-//    }
 
     @Override
     public boolean removeTrip() {
