@@ -6,7 +6,7 @@ public class DomesticTrip extends Trip {
         super(tripDetails);
     }
 
-    public DomesticTrip(Date start, Date end, String destination, int price) {
+    public DomesticTrip(LocalDate start, LocalDate end, String destination, int price) {
         super(start, end, destination, price);
     }
 

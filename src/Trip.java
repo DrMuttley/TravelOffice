@@ -1,7 +1,7 @@
 public abstract class Trip {
 
-    private Date start;
-    private Date end;
+    private LocalDate start;
+    private LocalDate end;
     private String destination;
     private int price;
 
@@ -17,7 +17,7 @@ public abstract class Trip {
 
     public Trip(String tripDetails){}
 
-    public Trip(Date start, Date end, String destination, int price) {
+    public Trip(LocalDate start, LocalDate end, String destination, int price) {
         this.start = start;
         this.end = end;
         this.destination = destination;

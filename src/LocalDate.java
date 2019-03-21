@@ -1,10 +1,10 @@
-public class Date {
+public class LocalDate {
 
     private int year = 2001;
     private int mounth = 1;
     private int day = 1;
 
-    public Date(int year, int mounth, int day){
+    public LocalDate(int year, int mounth, int day){
 
         this.year = year;
         this.mounth = mounth;
@@ -43,7 +43,7 @@ public class Date {
         return returnDate;
     }
 
-    public static Date of(String stringDate){
+    public static LocalDate of(String stringDate){
 
         if(stringDate.length() == 10) {
 
@@ -51,7 +51,7 @@ public class Date {
             int month = Integer.parseInt(stringDate.substring(5, 7));
             int day = Integer.parseInt(stringDate.substring(8, 10));
 
-            return new Date(year, month, day);
+            return new LocalDate(year, month, day);
         }else{
             return null;
         }

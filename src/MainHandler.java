@@ -1,5 +1,3 @@
-import java.util.Set;
-
 import java.util.Scanner;
 
 public class MainHandler implements UserInterface {
@@ -42,8 +40,8 @@ public class MainHandler implements UserInterface {
 
                     String[] tripData = splitInputData(getAnswerFromUser());
 
-                    DomesticTrip domesticTrip = new DomesticTrip(Date.of(tripData[0]),
-                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
+                    DomesticTrip domesticTrip = new DomesticTrip(LocalDate.of(tripData[0]),
+                            LocalDate.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
 
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), domesticTrip);
@@ -54,8 +52,8 @@ public class MainHandler implements UserInterface {
 
                     String[] tripData = splitInputData(getAnswerFromUser());
 
-                    AbroadTrip abroadTrip = new AbroadTrip(Date.of(tripData[0]),
-                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
+                    AbroadTrip abroadTrip = new AbroadTrip(LocalDate.of(tripData[0]),
+                            LocalDate.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
 
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), abroadTrip);
