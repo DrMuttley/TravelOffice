@@ -1,4 +1,4 @@
-import javafx.scene.input.DataFormat;
+import java.util.Set;
 
 import java.util.Scanner;
 
@@ -91,17 +91,41 @@ public class MainHandler implements UserInterface {
     @Override
     public boolean removeCustomer() {
 
-        showAnswerFromSystem("Provide name of customer:");
-        try {
-            travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()));
-            showAnswerFromSystem("The customer was removed.\n");
-            return true;
-        } catch (NoSuchCustomerException e) {
-            System.err.println(e.getMessage());
-            showAnswerFromSystem("The customer wasn't found.\n");
+        if(!travelOffice.getCustomersSet().isEmpty()) {
+
+            showAnswerFromSystem("Provide name of customer:");
+
+            return travelOffice.getCustomersSet().removeIf(customer -> {
+                try {
+                    equals(travelOffice.findCustomerByName(getAnswerFromUser()));
+                    showAnswerFromSystem("The customer was removed.\n");
+                    return true;
+                } catch (NoSuchCustomerException e) {
+                    System.err.println(e.getMessage());
+                    showAnswerFromSystem("The customer wasn't found.\n");
+                    return false;
+                }
+            });
+        }else{
+            showAnswerFromSystem("The customers database is empty.\n");
             return false;
         }
     }
+
+//    @Override
+//    public boolean removeCustomer() {
+//
+//        showAnswerFromSystem("Provide name of customer:");
+//        try {
+//            travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()));
+//            showAnswerFromSystem("The customer was removed.\n");
+//            return true;
+//        } catch (NoSuchCustomerException e) {
+//            System.err.println(e.getMessage());
+//            showAnswerFromSystem("The customer wasn't found.\n");
+//            return false;
+//        }
+//    }
 
     @Override
     public boolean removeTrip() {
@@ -129,12 +153,12 @@ public class MainHandler implements UserInterface {
 
     @Override
     public void showTrips() {
-        showAnswerFromSystem(travelOffice.showAllTrips());
+        travelOffice.showAllTrips();
     }
 
     @Override
     public void showCustomers() {
-        showAnswerFromSystem(travelOffice.showAllCustomers());
+        travelOffice.showAllCustomers();
     }
 
     private void showAnswerFromSystem(String answerFromSystem) {

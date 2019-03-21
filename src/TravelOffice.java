@@ -24,23 +24,14 @@ public class TravelOffice {
         return customersSet.size();
     }
 
-    public String showAllCustomers(){
-
-        String allCustomersInfo = new String();
-
-        for(Customer c : customersSet){
-            allCustomersInfo += c.toString() + "\n";
-        }
-        return allCustomersInfo;
+    public void showAllCustomers(){
+        customersSet.forEach(customer -> System.out.println(customer.toString()));
+        System.out.println();
     }
 
-    public String showAllTrips(){
-
-        String allTripsInfo = new String();
-        for (Map.Entry<String,Trip> entry : getTripsMap().entrySet()) {
-            allTripsInfo += entry.getKey() + " " + entry.getValue().toString() + "\n";
-        }
-        return allTripsInfo;
+    public void showAllTrips(){
+        getTripsMap().entrySet().forEach(trip -> System.out.println(trip.getValue()));
+        System.out.println();
     }
 
     public void addTrip(String description, Trip trip){
