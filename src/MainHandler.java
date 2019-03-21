@@ -15,14 +15,14 @@ public class MainHandler implements UserInterface {
 
         String[] customerData = splitInputData(getAnswerFromUser());
 
-        if(customerData.length == 5) {
+        if (customerData.length == 5) {
 
             Customer customer = new Customer(customerData[0] + " " + customerData[1]);
             customer.setAddress(new Address(customerData[2], customerData[3], customerData[4]));
 
             travelOffice.addCustomer(customer);
             return customer;
-        }else{
+        } else {
             showAnswerFromSystem("Wrong data, back and try again.\n");
             return null;
         }
@@ -43,7 +43,7 @@ public class MainHandler implements UserInterface {
                     String[] tripData = splitInputData(getAnswerFromUser());
 
                     DomesticTrip domesticTrip = new DomesticTrip(Date.of(tripData[0]),
-                                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
+                            Date.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
 
                     showAnswerFromSystem("Provide description:");
                     travelOffice.addTrip(getAnswerFromUser(), domesticTrip);
@@ -76,20 +76,29 @@ public class MainHandler implements UserInterface {
         showAnswerFromSystem("Provide trip description:");
         String tripDescription = getAnswerFromUser();
 
-        if(travelOffice.findTripByDescription(tripDescription) != null && travelOffice.findCustomerByName(userName) != null) {
-            travelOffice.findCustomerByName(userName).assignTrip(travelOffice.findTripByDescription(tripDescription));
-        }else{
-            showAnswerFromSystem("The trip or customer wasn't found, make sure that the entered data is correct.");
+        try {
+            if (travelOffice.findTripByDescription(tripDescription) != null) {
+                travelOffice.findCustomerByName(userName).assignTrip(travelOffice.findTripByDescription(tripDescription));
+            } else {
+                showAnswerFromSystem("The trip wasn't found.\n");
+            }
+        } catch (NoSuchCustomerException e) {
+            System.err.println(e.getMessage());
+            showAnswerFromSystem("The customer wasn't found.\n");
         }
     }
 
     @Override
     public boolean removeCustomer() {
+
         showAnswerFromSystem("Provide name of customer:");
-        if(travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()))){
+        try {
+            travelOffice.removeCustomer(travelOffice.findCustomerByName(getAnswerFromUser()));
+            showAnswerFromSystem("The customer was removed.\n");
             return true;
-        }else{
-            showAnswerFromSystem("Customer not found.\n");
+        } catch (NoSuchCustomerException e) {
+            System.err.println(e.getMessage());
+            showAnswerFromSystem("The customer wasn't found.\n");
             return false;
         }
     }
@@ -100,10 +109,19 @@ public class MainHandler implements UserInterface {
 
         String description = getAnswerFromUser();
 
-        if(travelOffice.removeTrip(description)){
-            travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description)).setTrip(null);
+        try {
+            Customer customer = travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description));
+            travelOffice.removeTrip(description);
+
+            if (customer != null) {
+                customer.setTrip(null);
+            }
+            showAnswerFromSystem("The trip was removed.");
             return true;
-        }else{
+
+        } catch (NoSuchTripException e) {
+
+            System.err.println(e.getMessage());
             showAnswerFromSystem("Trip wasn't found.\n");
             return false;
         }
@@ -187,7 +205,7 @@ public class MainHandler implements UserInterface {
         return communiactionWithUserEnd;
     }
 
-    private String[] splitInputData(String inputData){
+    private String[] splitInputData(String inputData) {
         return inputData.split(" ");
     }
 }

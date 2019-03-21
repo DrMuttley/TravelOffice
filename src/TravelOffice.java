@@ -47,18 +47,24 @@ public class TravelOffice {
         tripsMap.put(description, trip);
     }
 
-    public boolean removeTrip(String description){
-        return tripsMap.remove(description) != null;
+    public void removeTrip(String description) throws NoSuchTripException{
+
+        if(tripsMap.containsKey(description)){
+            System.out.println(description);
+            tripsMap.remove(description);
+        }else{
+            throw new NoSuchTripException("The trip wasn't found");
+        }
     }
 
-    public Customer findCustomerByName(String name){
+    public Customer findCustomerByName(String name) throws NoSuchCustomerException{
 
         for(Customer c : customersSet){
             if(c.getName().equals(name)){
                 return c;
             }
         }
-        return null;
+        throw new NoSuchCustomerException("The customer not found exception.");
     }
 
     public Customer findCustomerByTrip(Trip trip){
@@ -82,11 +88,11 @@ public class TravelOffice {
         return null;
     }
 
+    public void removeCustomer(Customer customer) throws NoSuchCustomerException{
 
-
-
-    public boolean removeCustomer(Customer customer){
-        return customersSet.remove(customer);
+        if(!customersSet.remove(customer)){
+            throw new NoSuchCustomerException("The customer not found exception.");
+        }
     }
 
 }
