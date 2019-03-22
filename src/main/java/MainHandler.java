@@ -1,11 +1,16 @@
 package main.java;
 
+import main.java.services.TravelOfficceService;
+
 import java.util.logging.Logger;
 import java.util.Scanner;
 
 public class MainHandler implements UserInterface {
 
-    private TravelOffice travelOffice = new TravelOffice();
+    //private TravelOffice travelOffice = new TravelOffice();
+    private TravelOfficceService travelOfficceService = new TravelOfficceService();
+
+
     private Scanner scan = new Scanner(System.in);
     private boolean communiactionWithUserEnd = false;
 
@@ -23,7 +28,7 @@ public class MainHandler implements UserInterface {
             Customer customer = new Customer(customerData[0] + " " + customerData[1]);
             customer.setAddress(new Address(customerData[2], customerData[3], customerData[4]));
 
-            travelOffice.addCustomer(customer);
+            travelOfficceService.addCustomer(customer);
 
             logger.info("New customer was added to DB.");
             showAnswerFromSystem("The customer was successfully added to DB.\n");
@@ -53,7 +58,7 @@ public class MainHandler implements UserInterface {
                             LocalDate.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
 
                     showAnswerFromSystem("Provide description:");
-                    travelOffice.addTrip(getAnswerFromUser(), domesticTrip);
+                    travelOfficceService.addTrip(getAnswerFromUser(), domesticTrip);
 
                     logger.info("New domestic trip was added to DB.");
                     showAnswerFromSystem("The trip was successfully added to DB.\n");
@@ -69,7 +74,7 @@ public class MainHandler implements UserInterface {
                             LocalDate.of(tripData[1]), tripData[2], Integer.parseInt(tripData[3]));
 
                     showAnswerFromSystem("Provide description:");
-                    travelOffice.addTrip(getAnswerFromUser(), abroadTrip);
+                    travelOfficceService.addTrip(getAnswerFromUser(), abroadTrip);
 
                     logger.info("New abroad trip was added to DB.");
                     showAnswerFromSystem("The trip was successfully added to DB.\n");
@@ -92,8 +97,8 @@ public class MainHandler implements UserInterface {
         String tripDescription = getAnswerFromUser();
 
         try {
-            if (travelOffice.findTripByDescription(tripDescription) != null) {
-                travelOffice.findCustomerByName(userName).assignTrip(travelOffice.findTripByDescription(tripDescription));
+            if (travelOfficceService.findTripByDescription(tripDescription) != null) {
+                travelOfficceService.findCustomerByName(userName).assignTrip(travelOfficceService.findTripByDescription(tripDescription));
             } else {
                 showAnswerFromSystem("The trip wasn't found.\n");
             }
@@ -107,13 +112,13 @@ public class MainHandler implements UserInterface {
     @Override
     public boolean removeCustomer() {
 
-        if(!travelOffice.getCustomersSet().isEmpty()) {
+        if(!travelOfficceService.getCustomersSet().isEmpty()) {
 
             showAnswerFromSystem("Provide name of customer:");
 
             try {
-                Customer foundCustomer = travelOffice.findCustomerByName(getAnswerFromUser());
-                travelOffice.getCustomersSet().removeIf(customer -> customer.equals(foundCustomer));
+                Customer foundCustomer = travelOfficceService.findCustomerByName(getAnswerFromUser());
+                travelOfficceService.getCustomersSet().removeIf(customer -> customer.equals(foundCustomer));
 
                 logger.info("The customer was removed from DB.");
                 showAnswerFromSystem("The customer was removed.\n");
@@ -139,12 +144,12 @@ public class MainHandler implements UserInterface {
 
         try {
 
-            Customer customer = travelOffice.findCustomerByTrip(travelOffice.findTripByDescription(description));
+            Customer customer = travelOfficceService.findCustomerByTrip(travelOfficceService.findTripByDescription(description));
 
             if(customer != null) {
                 customer.setTrip(null);
             }
-            travelOffice.removeTrip(description);
+            travelOfficceService.removeTrip(description);
 
             logger.info("The trip was removed from DB.");
             showAnswerFromSystem("The trip was removed.\n");
@@ -161,12 +166,12 @@ public class MainHandler implements UserInterface {
 
     @Override
     public void showTrips() {
-        travelOffice.showAllTrips();
+        travelOfficceService.showAllTrips();
     }
 
     @Override
     public void showCustomers() {
-        travelOffice.showAllCustomers();
+        travelOfficceService.showAllCustomers();
     }
 
     private void showAnswerFromSystem(String answerFromSystem) {
