@@ -1,3 +1,5 @@
+package main.java;
+
 public class AbroadTrip extends Trip {
 
     private int insurance;

@@ -1,3 +1,5 @@
+package main.java;
+
 public class DomesticTrip extends Trip {
 
     private int ownArrivalDiscount;

@@ -1,3 +1,5 @@
+package main.java;
+
 public abstract class Trip {
 
     private LocalDate start;

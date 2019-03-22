@@ -1,3 +1,5 @@
+package main.java;
+
 import java.util.logging.Logger;
 import java.util.Scanner;
 
